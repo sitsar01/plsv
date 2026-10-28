@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Lab Maya PLSV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#edf3f0;
+        --bg-soft:#e2ede8;
+        --surface:#ffffff;
+        --surface-2:#f4f8f6;
+        --ink:#122e2a;
+        --muted:#4d645d;
+        --line:#cfded7;
+        --teal:#0d7268;
+        --teal-dark:#095249;
+        --teal-soft:#d9efe9;
+        --amber:#dd8503;
+        --amber-soft:#fceecb;
+        --amber-ink:#7a4a00;
+        --good:#177a3d;
+        --good-soft:#dcf2e2;
+        --bad:#bc430f;
+        --bad-soft:#fbe3d3;
+        --beam:#33524b;
+        --shadow:0 10px 30px rgba(9,60,50,.10);
+        --radius:18px;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#0b1614;
+          --bg-soft:#0f1f1b;
+          --surface:#152622;
+          --surface-2:#1a2e29;
+          --ink:#e7f1ed;
+          --muted:#a3bcb3;
+          --line:#2a443c;
+          --teal:#3cb8a7;
+          --teal-dark:#7fd8c9;
+          --teal-soft:#173c35;
+          --amber:#f2a93b;
+          --amber-soft:#3d2f10;
+          --amber-ink:#ffd98a;
+          --good:#4cc477;
+          --good-soft:#143527;
+          --bad:#f08a54;
+          --bad-soft:#3d2113;
+          --beam:#9fc4b9;
+          --shadow:0 10px 30px rgba(0,0,0,.35);
+        }
+      }
+      *{box-sizing:border-box}
+      html{scroll-behavior:smooth}
+      body{
+        margin:0;background:var(--bg);color:var(--ink);
+        font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+        -webkit-font-smoothing:antialiased;
+      }
+      .mono{font-family:"JetBrains Mono",monospace}
+      .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 56px}
+
+      /* ---------- header ---------- */
+      header.intro{padding:14px 0 6px}
+      .badge{
+        display:inline-block;background:var(--teal);color:#fff;font-weight:700;font-size:.78rem;
+        padding:5px 12px;border-radius:999px;letter-spacing:.02em;
+      }
+      @media (prefers-color-scheme: dark){.badge{color:#06231f}}
+      h1{font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.15;margin:12px 0 8px;font-weight:800}
+      h1 .hl{color:var(--teal)}
+      .lede{color:var(--muted);font-size:1.02rem;line-height:1.6;max-width:720px;margin:0}
+      .tabbar{
+        display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding:6px;
+        background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+      }
+      .tab-btn{
+        flex:1 1 auto;background:transparent;color:var(--muted);border:1px solid transparent;
+        padding:11px 14px;border-radius:11px;font-weight:700;font-size:.92rem;white-space:nowrap;
+      }
+      .tab-btn:hover{color:var(--teal-dark);background:var(--surface-2)}
+      .tab-btn.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+      @media (prefers-color-scheme: dark){.tab-btn.active{color:#06231f}}
+      .tab-panel{display:none}
+      .tab-panel.active{display:block}
+      @media (max-width:560px){
+        .tabbar{gap:6px;padding:5px}
+        .tab-btn{flex:1 1 30%;white-space:normal;text-align:center;font-size:.85rem;padding:10px 8px;line-height:1.3}
+      }
+
+      .howto{
+        display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 8px;
+      }
+      .howto .step{
+        background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+      }
+      .howto .num{
+        display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;
+        background:var(--amber-soft);color:var(--amber-ink);font-weight:800;font-size:.9rem;margin-bottom:8px;
+      }
+      .howto h3{margin:0 0 4px;font-size:.98rem}
+      .howto p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.55}
+
+      section{margin-top:22px}
+      section.tab-panel{margin-top:22px}
+      h2{font-size:1.45rem;margin:0 0 6px;font-weight:800}
+      .sec-sub{color:var(--muted);margin:0 0 16px;line-height:1.6;max-width:760px}
+
+      /* ---------- lab layout ---------- */
+      .lab{
+        display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:16px;align-items:start;
+      }
+      .card{
+        background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+        box-shadow:var(--shadow);padding:18px;
+      }
+      .lab-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:6px}
+      .lab-title{font-weight:800;font-size:1.05rem}
+      .chips{display:flex;gap:8px;flex-wrap:wrap}
+      .chip{
+        font-size:.8rem;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--surface-2);
+        border:1px solid var(--line);color:var(--muted);
+      }
+      .chip strong{color:var(--ink)}
+      .chip.ok{background:var(--good-soft);color:var(--good);border-color:transparent}
+
+      .equation{
+        text-align:center;font-family:"JetBrains Mono",monospace;font-weight:700;
+        font-size:clamp(1.5rem,4.5vw,2.3rem);padding:16px 8px 6px;line-height:1.5;
+      }
+      .equation .eq-sign{color:var(--amber);padding:0 .25em}
+      .equation .var{color:var(--teal)}
+      .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .08em;line-height:1.15;font-size:.72em}
+      .frac .top{border-bottom:.09em solid currentColor;padding:0 .3em}
+      .frac .bot{padding:0 .3em}
+      .eq-caption{text-align:center;color:var(--muted);font-size:.88rem;margin:0 0 4px}
+
+      .scale-box{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:6px 4px 2px}
+      svg text{font-family:"JetBrains Mono",monospace}
+      .svg-beam{stroke:var(--beam);stroke-width:9;stroke-linecap:round}
+      .svg-string{stroke:var(--beam);stroke-width:3}
+      .svg-pan{fill:var(--beam)}
+      .svg-pillar{fill:var(--beam)}
+      .svg-box{fill:var(--amber);stroke:rgba(0,0,0,.18);stroke-width:1}
+      .svg-box-txt{fill:#3a2703;font-weight:700}
+      @media (prefers-color-scheme: dark){.svg-box-txt{fill:#241a02}}
+      .svg-weight{fill:var(--teal);stroke:rgba(0,0,0,.15);stroke-width:1}
+      .svg-weight-txt{fill:#fff;font-weight:700}
+      .svg-weight.neg{fill:var(--bad)}
+      .svg-single{fill:var(--teal-soft);stroke:var(--teal);stroke-width:2}
+      .svg-single-txt{fill:var(--teal-dark);font-weight:700}
+
+      .readouts{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin-top:12px}
+      .readout{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;text-align:center}
+      .readout .lbl{font-size:.78rem;color:var(--muted);font-weight:600}
+      .readout .val{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:1.15rem;margin-top:2px}
+      .vs{display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted);font-size:1.1rem}
+      .verdict{
+        margin-top:12px;border-radius:12px;padding:12px 14px;font-weight:600;line-height:1.55;font-size:.95rem;
+        background:var(--amber-soft);color:var(--amber-ink);border:1px solid transparent;
+      }
+      .verdict.good{background:var(--good-soft);color:var(--good)}
+      .verdict.bad{background:var(--bad-soft);color:var(--bad)}
+
+      .trial{margin-top:16px}
+      .trial label{font-weight:700;font-size:.92rem;display:flex;justify-content:space-between;align-items:baseline}
+      .trial label output{font-family:"JetBrains Mono",monospace;color:var(--teal);font-size:1.05rem}
+      input[type=range]{width:100%;accent-color:var(--teal);height:36px}
+      .trial-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+
+      button{
+        font-family:inherit;cursor:pointer;border:none;border-radius:12px;font-weight:700;
+        padding:10px 16px;font-size:.92rem;transition:transform .08s ease, background .15s ease;
+      }
+      button:active{transform:scale(.97)}
+      .btn-teal{background:var(--teal);color:#fff}
+      @media (prefers-color-scheme: dark){.btn-teal{color:#06231f}}
+      .btn-teal:hover{background:var(--teal-dark)}
+      @media (prefers-color-scheme: dark){.btn-teal:hover{color:#06231f}}
+      .btn-ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+      .btn-ghost:hover{border-color:var(--teal);color:var(--teal-dark)}
+      .btn-amber{background:var(--amber);color:#2e1d00}
+      .btn-amber:hover{filter:brightness(1.06)}
+      button:disabled{opacity:.45;cursor:not-allowed}
+
+      .journal{margin-top:16px}
+      .journal h3{margin:0 0 8px;font-size:.95rem}
+      .journal-empty{color:var(--muted);font-size:.88rem;margin:0}
+      .jrow{
+        display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px;border-radius:10px;
+        background:var(--surface-2);border:1px solid var(--line);margin-bottom:6px;font-size:.86rem;align-items:center;
+      }
+      .jrow .mono{font-weight:700}
+      .jrow .st{font-weight:800;text-align:right}
+      .jrow .st.sama{color:var(--good)}
+      .jrow .st.beda{color:var(--bad)}
+
+      /* ---------- control panel ---------- */
+      .panel h3{margin:0 0 10px;font-size:1rem}
+      .panel h3:not(:first-child){margin-top:20px}
+      .presets{display:flex;flex-wrap:wrap;gap:8px}
+      .preset{
+        background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
+        font-family:"JetBrains Mono",monospace;font-size:.85rem;padding:8px 12px;border-radius:10px;
+      }
+      .preset:hover{border-color:var(--teal)}
+      .preset.active{background:var(--teal-soft);border-color:var(--teal);color:var(--teal-dark)}
+      .op-row{display:flex;gap:8px;align-items:center}
+      .op-row label{font-weight:600;font-size:.9rem;color:var(--muted)}
+      input[type=number]{
+        font-family:"JetBrains Mono",monospace;font-weight:700;font-size:1rem;width:110px;
+        padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);
+        color:var(--ink);
+      }
+      input[type=number]:focus{outline:2px solid var(--teal);outline-offset:1px}
+      .op-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+      .op-grid button{background:var(--teal-soft);color:var(--teal-dark);border:1px solid transparent}
+      .op-grid button:hover{border-color:var(--teal)}
+      .op-note{color:var(--muted);font-size:.85rem;line-height:1.55;margin:10px 0 0}
+      .op-msg{font-size:.88rem;font-weight:600;margin-top:8px;min-height:1.2em;color:var(--bad)}
+      .op-msg.ok{color:var(--good)}
+      .tool-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+      .hint-box{
+        margin-top:12px;background:var(--amber-soft);color:var(--amber-ink);border-radius:12px;
+        padding:11px 13px;font-size:.9rem;line-height:1.55;display:none;
+      }
+      .hint-box.show{display:block}
+
+      .log{margin-top:6px}
+      .log-item{
+        display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);align-items:baseline;
+      }
+      .log-item:last-child{border-bottom:none}
+      .log-num{
+        flex:none;width:24px;height:24px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);
+        display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;color:var(--muted);
+      }
+      .log-body{font-size:.9rem;line-height:1.5}
+      .log-body .op{color:var(--teal);font-weight:700;display:block;font-size:.84rem}
+      .log-body .eq{font-family:"JetBrains Mono",monospace;font-weight:700}
+
+      .solved-banner{
+        display:none;margin-top:14px;background:var(--good-soft);color:var(--good);
+        border-radius:14px;padding:14px 16px;font-weight:700;line-height:1.55;
+      }
+      .solved-banner.show{display:block;animation:pop .35s ease}
+      .solved-banner .big{font-family:"JetBrains Mono",monospace;font-size:1.3rem;display:block;margin-top:2px}
+      @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+      @media (prefers-reduced-motion: reduce){
+        html{scroll-behavior:auto}
+        .solved-banner.show{animation:none}
+        button{transition:none}
+      }
+
+      /* ---------- missions ---------- */
+      .missions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+      .mission{display:flex;flex-direction:column}
+      .mission .tag{
+        align-self:flex-start;font-size:.76rem;font-weight:800;padding:4px 10px;border-radius:999px;
+        background:var(--amber-soft);color:var(--amber-ink);margin-bottom:10px;
+      }
+      .mission .tag.done{background:var(--good-soft);color:var(--good)}
+      .mission h3{margin:0 0 8px;font-size:1.02rem}
+      .mission p{color:var(--muted);font-size:.92rem;line-height:1.6;margin:0 0 10px}
+      .mission .meq{
+        font-family:"JetBrains Mono",monospace;font-weight:700;background:var(--surface-2);
+        border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center;margin-bottom:12px;
+      }
+      .mission .spacer{flex:1}
+      details.bahas{margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+      details.bahas summary{cursor:pointer;font-weight:700;color:var(--teal-dark);font-size:.92rem}
+      .bahas-body{font-size:.9rem;line-height:1.65;margin-top:8px}
+      .bahas-body p{margin:0 0 6px;color:var(--ink)}
+      .bahas-body .lbl{font-weight:800;color:var(--teal-dark)}
+      .bahas-body .step-eq{font-family:"JetBrains Mono",monospace;font-weight:700;display:block;margin:2px 0 2px 14px}
+      .bahas-body .jadi{background:var(--good-soft);color:var(--good);border-radius:10px;padding:9px 12px;font-weight:600;margin-top:8px}
+
+      /* ---------- principles ---------- */
+      .principles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+      .principle{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+      .principle .sym{
+        font-family:"JetBrains Mono",monospace;font-weight:700;font-size:1.4rem;color:var(--teal);
+        background:var(--teal-soft);width:52px;height:52px;border-radius:14px;
+        display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+      }
+      .principle h3{margin:0 0 5px;font-size:.97rem}
+      .principle p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.55}
+      .principle .ex{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--ink);display:block;margin-top:8px;font-weight:700}
+
+      /* ---------- challenge / custom ---------- */
+      .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      .custom-grid{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:8px;align-items:end}
+      .custom-grid label{font-size:.82rem;font-weight:700;color:var(--muted);display:block;margin-bottom:5px}
+      .custom-grid input{width:100%}
+      .big-score{font-family:"JetBrains Mono",monospace;font-size:2rem;font-weight:700;color:var(--teal)}
+      .card p.desc{color:var(--muted);font-size:.92rem;line-height:1.6;margin:0 0 12px}
+
+      /* ---------- reflection ---------- */
+      .reflect{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+      .reflect ul{list-style:none;margin:0;padding:0}
+      .reflect li{
+        padding:10px 0 10px 34px;position:relative;line-height:1.6;color:var(--ink);
+        border-bottom:1px dashed var(--line);font-size:.95rem;
+      }
+      .reflect li:last-child{border-bottom:none}
+      .reflect li::before{
+        content:"";position:absolute;left:2px;top:13px;width:16px;height:16px;border-radius:5px;
+        border:2px solid var(--teal);background:var(--teal-soft);
+      }
+      footer{margin-top:36px;color:var(--muted);font-size:.85rem;text-align:center;line-height:1.6}
+
+      @media (max-width:960px){
+        .lab{grid-template-columns:1fr}
+        .missions{grid-template-columns:1fr}
+        .principles{grid-template-columns:1fr 1fr}
+        .howto{grid-template-columns:1fr}
+        .two-col{grid-template-columns:1fr}
+      }
+      @media (max-width:560px){
+        .principles{grid-template-columns:1fr}
+        .custom-grid{grid-template-columns:1fr 1fr}
+        .readouts{grid-template-columns:1fr 1fr}
+        .vs{display:none}
+        .jrow{grid-template-columns:1fr 1fr}
+        .card{padding:14px}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="intro">
+        <span class="badge">Lab Maya &middot; Matematika</span>
+        <h1>Persamaan Linear <span class="hl">Satu Variabel</span>, Dibuktikan dengan Timbangan</h1>
+        <p class="lede">
+          Di lab ini kamu menyelesaikan persamaan dengan dua cara: mencoba nilai sampai timbangan
+          seimbang, dan memakai sifat kesetaraan &mdash; melakukan operasi yang sama pada kedua ruas
+          sampai variabel berdiri sendiri. Setiap langkahmu tercatat, jadi kamu bisa melihat sendiri
+          mengapa jawabannya benar.
+        </p>
+        <nav class="tabbar" role="tablist" aria-label="Bagian lab">
+          <button type="button" class="tab-btn active" data-tab="lab" role="tab" aria-selected="true">Lab Timbangan</button>
+          <button type="button" class="tab-btn" data-tab="misi" role="tab" aria-selected="false">Misi Kontekstual</button>
+          <button type="button" class="tab-btn" data-tab="prinsip" role="tab" aria-selected="false">Sifat Kesetaraan</button>
+          <button type="button" class="tab-btn" data-tab="tantangan" role="tab" aria-selected="false">Tantangan &amp; Mode Bebas</button>
+          <button type="button" class="tab-btn" data-tab="refleksi" role="tab" aria-selected="false">Refleksi</button>
+        </nav>
+      </header>
+
+      <!-- ================= LAB ================= -->
+      <section id="lab" class="tab-panel active" data-panel="lab">
+        <h2>Lab Timbangan</h2>
+        <p class="sec-sub">
+          Ruas kiri dan ruas kanan adalah dua piring timbangan. Persamaan berarti kedua piring
+          seimbang &mdash; dan kesetaraan itu tidak rusak selama operasi yang sama dilakukan pada kedua ruas.
+        </p>
+
+        <div class="howto">
+          <div class="step">
+            <span class="num">1</span>
+            <h3>Pilih persamaan</h3>
+            <p>Ambil contoh cepat, muat salah satu misi kontekstual, buat persamaanmu sendiri, atau terima tantangan acak.</p>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <h3>Coba nilai pada timbangan</h3>
+            <p>Geser nilai variabel dan amati timbangan. Timbangan hanya seimbang jika nilai itu benar-benar penyelesaiannya.</p>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <h3>Selesaikan dengan operasi</h3>
+            <p>Tambah, kurang, kali, atau bagi <em>kedua ruas</em> dengan bilangan yang sama sampai variabel sendirian di satu ruas.</p>
+          </div>
+        </div>
+
+        <div class="lab">
+          <!-- Stage -->
+          <div class="card">
+            <div class="lab-head">
+              <span class="lab-title" id="eqTitle">Persamaan Awal</span>
+              <div class="chips">
+                <span class="chip">Langkah: <strong id="stepCount">0</strong></span>
+                <span class="chip" id="statusChip">Belum selesai</span>
+              </div>
+            </div>
+
+            <div class="equation" id="equationDisplay"></div>
+            <p class="eq-caption" id="eqCaption"></p>
+
+            <div class="scale-box">
+              <svg id="scaleSvg" viewBox="0 0 640 372" width="100%" role="img" aria-label="Ilustrasi timbangan dua piring untuk ruas kiri dan ruas kanan persamaan">
+                <line x1="30" y1="352" x2="610" y2="352" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+                <polygon class="svg-pillar" points="320,116 288,340 352,340"/>
+                <rect class="svg-pillar" x="252" y="338" width="136" height="13" rx="5"/>
+                <g id="beamG">
+                  <line class="svg-beam" x1="80" y1="108" x2="560" y2="108"/>
+                  <g id="leftHang"></g>
+                  <g id="rightHang"></g>
+                </g>
+                <circle cx="320" cy="108" r="13" fill="var(--amber)" stroke="rgba(0,0,0,.2)" stroke-width="2"/>
+              </svg>
+            </div>
+
+            <div class="readouts">
+              <div class="readout">
+                <div class="lbl">Ruas kiri</div>
+                <div class="val" id="leftVal">&ndash;</div>
+              </div>
+              <div class="vs" id="vsSign">=</div>
+              <div class="readout">
+                <div class="lbl">Ruas kanan</div>
+                <div class="val" id="rightVal">&ndash;</div>
+              </div>
+            </div>
+
+            <div class="verdict" id="verdict">Geser nilai variabel di bawah untuk mulai mencoba.</div>
+
+            <div class="trial">
+              <label for="trialSlider"><span>Coba nilai <span id="trialVarLabel">x</span></span>
+                <output id="trialOut">0</output>
+              </label>
+              <input type="range" id="trialSlider" min="0" max="20" step="1" value="0" />
+              <div class="trial-actions">
+                <button class="btn-teal" id="recordTrialBtn" type="button">Catat Percobaan</button>
+                <button class="btn-ghost" id="clearJournalBtn" type="button">Bersihkan Jurnal</button>
+              </div>
+            </div>
+
+            <div class="journal">
+              <h3>Jurnal Percobaan</h3>
+              <p class="journal-empty" id="journalEmpty">Belum ada percobaan yang dicatat. Nilai yang membuat ruas kiri sama dengan ruas kanan adalah penyelesaiannya.</p>
+              <div id="journalList"></div>
+            </div>
+
+            <div class="solved-banner" id="solvedBanner">
+              Persamaan berhasil diselesaikan dengan sifat kesetaraan.
+              <span class="big" id="solvedText"></span>
+              <span id="solvedExtra"></span>
+            </div>
+          </div>
+
+          <!-- Control panel -->
+          <div class="card panel">
+            <h3>Contoh Cepat</h3>
+            <div class="presets" id="presetRow"></div>
+
+            <h3>Operasi pada Kedua Ruas</h3>
+            <div class="op-row">
+              <label for="opN">Bilangan n</label>
+              <input type="number" id="opN" value="5" />
+            </div>
+            <div class="op-grid">
+              <button type="button" data-op="add">Tambah n</button>
+              <button type="button" data-op="sub">Kurang n</button>
+              <button type="button" data-op="mul">Kali n</button>
+              <button type="button" data-op="div">Bagi n</button>
+            </div>
+            <p class="op-note">
+              Operasi selalu diterapkan ke <strong>kedua ruas sekaligus</strong>. Itulah sebabnya tanda
+              sama dengan tetap berlaku setelah setiap langkah.
+            </p>
+            <p class="op-msg" id="opMsg"></p>
+            <div class="tool-row">
+              <button class="btn-amber" id="hintBtn" type="button">Minta Petunjuk</button>
+              <button class="btn-ghost" id="undoBtn" type="button">Urungkan Langkah</button>
+              <button class="btn-ghost" id="resetBtn" type="button">Ulangi Persamaan</button>
+            </div>
+            <div class="hint-box" id="hintBox"></div>
+
+            <h3>Catatan Langkah</h3>
+            <div class="log" id="logList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MISSIONS ================= -->
+      <section id="misi" class="tab-panel" data-panel="misi">
+        <h2>Misi Kontekstual</h2>
+        <p class="sec-sub">
+          Tiga masalah sehari-hari yang dimodelkan menjadi PLSV. Muat misinya ke lab, selesaikan di
+          timbangan, lalu bandingkan langkahmu dengan pembahasan baku di setiap kartu.
+          Misi yang sudah kamu selesaikan di lab akan bertanda selesai.
+        </p>
+        <div class="missions" id="missionGrid"></div>
+      </section>
+
+      <!-- ================= PRINCIPLES ================= -->
+      <section id="prinsip" class="tab-panel" data-panel="prinsip">
+        <h2>Sifat Kesetaraan</h2>
+        <p class="sec-sub">
+          Empat operasi inilah satu-satunya &ldquo;alat&rdquo; di lab. Semuanya punya satu aturan yang sama:
+          apa pun yang dilakukan pada satu ruas harus dilakukan juga pada ruas yang lain.
+        </p>
+        <div class="principles">
+          <div class="principle">
+            <div class="sym">+n</div>
+            <h3>Menambah kedua ruas</h3>
+            <p>Jika kedua ruas ditambah bilangan yang sama, kesetaraan tetap berlaku.</p>
+            <span class="ex">x &minus; 4 = 10 &rarr; x = 14</span>
+          </div>
+          <div class="principle">
+            <div class="sym">&minus;n</div>
+            <h3>Mengurang kedua ruas</h3>
+            <p>Jika kedua ruas dikurang bilangan yang sama, kesetaraan tetap berlaku.</p>
+            <span class="ex">x + 5 = 12 &rarr; x = 7</span>
+          </div>
+          <div class="principle">
+            <div class="sym">&times;n</div>
+            <h3>Mengali kedua ruas</h3>
+            <p>Jika kedua ruas dikali bilangan yang sama (bukan nol), kesetaraan tetap berlaku.</p>
+            <span class="ex"><span class="frac"><span class="top">x</span><span class="bot">3</span></span> = 4 &rarr; x = 12</span>
+          </div>
+          <div class="principle">
+            <div class="sym">&divide;n</div>
+            <h3>Membagi kedua ruas</h3>
+            <p>Jika kedua ruas dibagi bilangan yang sama (bukan nol), kesetaraan tetap berlaku.</p>
+            <span class="ex">4x = 40.000 &rarr; x = 10.000</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CHALLENGE & CUSTOM ================= -->
+      <section id="tantangan" class="tab-panel" data-panel="tantangan">
+        <h2>Tantangan &amp; Mode Bebas</h2>
+        <p class="sec-sub">
+          Uji pemahamanmu dengan persamaan acak, atau bangun persamaanmu sendiri dan selesaikan di lab.
+        </p>
+        <div class="two-col">
+          <div class="card">
+            <h3 style="margin-top:0">Tantangan Acak</h3>
+            <p class="desc">
+              Setiap tantangan adalah persamaan baru berbentuk ax + b = c. Selesaikan di Lab Timbangan
+              dengan operasi kesetaraan &mdash; menemukan jawaban lewat geseran saja belum dihitung.
+            </p>
+            <div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">
+              <div>
+                <div class="big-score" id="challengeScore">0</div>
+                <div style="color:var(--muted);font-size:.85rem;font-weight:600">tantangan selesai</div>
+              </div>
+              <button class="btn-teal" id="newChallengeBtn" type="button">Ambil Tantangan Baru</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="margin-top:0">Mode Bebas: Buat Persamaan Sendiri</h3>
+            <p class="desc">
+              Tentukan koefisien a (tidak boleh nol), konstanta b, dan ruas kanan c untuk persamaan
+              ax + b = c, lalu muat ke lab.
+            </p>
+            <div class="custom-grid">
+              <div><label for="customA">a (koefisien x)</label><input type="number" id="customA" value="3" /></div>
+              <div><label for="customB">b (konstanta)</label><input type="number" id="customB" value="6" /></div>
+              <div><label for="customC">c (ruas kanan)</label><input type="number" id="customC" value="21" /></div>
+              <button class="btn-teal" id="loadCustomBtn" type="button">Muat ke Lab</button>
+            </div>
+            <p class="op-msg" id="customMsg"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= REFLECTION ================= -->
+      <section id="refleksi" class="tab-panel" data-panel="refleksi">
+        <h2>Refleksi</h2>
+        <p class="sec-sub">Setelah bermain di lab, pastikan kamu bisa menjelaskan hal-hal berikut dengan bahasamu sendiri.</p>
+        <div class="reflect">
+          <ul>
+            <li>Mengapa operasi pada satu ruas saja &mdash; tanpa dilakukan pada ruas lain &mdash; merusak kesetaraan?</li>
+            <li>Apa perbedaan antara <em>mencoba nilai</em> sampai timbangan seimbang dan <em>menyelesaikan</em> persamaan dengan sifat kesetaraan?</li>
+            <li>Jika persamaanmu berbentuk ax + b = c, langkah apa yang biasanya kamu lakukan pertama: menghilangkan b atau membagi dengan a? Mengapa?</li>
+            <li>Bagaimana caramu memeriksa kembali jawaban akhir? (Petunjuk: substitusikan nilai x ke persamaan awal.)</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer>
+        Lab Maya PLSV &mdash; Persamaan Linear Satu Variabel &middot; Materi Matematika<br />
+        Ingat: timbangan yang seimbang adalah gambar dari tanda sama dengan.
+      </footer>
+    </div>
+
+    <script>
+    (function(){
+      "use strict";
+
+      /* ---------- rational numbers ---------- */
+      function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=a%b; a=b; b=t; } return a||1; }
+      function Fr(n,d){ d=(d===undefined?1:d); if(d<0){n=-n;d=-d;} var g=gcd(n,d); return {n:n/g, d:d/g}; }
+      function frInt(k){ return Fr(k,1); }
+      function frAddInt(f,k){ return Fr(f.n + k*f.d, f.d); }
+      function frMulInt(f,k){ return Fr(f.n*k, f.d); }
+      function frDivInt(f,k){ return Fr(f.n, f.d*k); }
+      function frVal(f){ return f.n/f.d; }
+      function frEqInt(f,k){ return f.d===1 && f.n===k; }
+      function fmtInt(v){
+        var neg = v<0; var s = String(Math.abs(v));
+        s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return (neg?"\u2212":"") + s;
+      }
+      function fmt(f){
+        if(f.d===1) return fmtInt(f.n);
+        var sign = f.n<0 ? "\u2212" : "";
+        return sign + '<span class="frac"><span class="top">'+Math.abs(f.n)+'</span><span class="bot">'+f.d+'</span></span>';
+      }
+      function fmtPlain(f){
+        if(f.d===1) return fmtInt(f.n);
+        return (f.n<0?"\u2212":"") + Math.abs(f.n) + "/" + f.d;
+      }
+      function fmtNum(v){
+        if(Math.abs(v - Math.round(v)) < 1e-9) return fmtInt(Math.round(v));
+        return String(Math.round(v*100)/100).replace(".", ",");
+      }
+
+      /* ---------- data ---------- */
+      var PRESETS = [
+        {id:"p1", a:1, b:5,  c:12,    v:"x", title:"Contoh Cepat 1"},
+        {id:"p2", a:3, b:5,  c:14,    v:"x", title:"Contoh Cepat 2"},
+        {id:"p3", a:2, b:-4, c:10,    v:"x", title:"Contoh Cepat 3"},
+        {id:"p4", a:5, b:0,  c:35,    v:"x", title:"Contoh Cepat 4"},
+        {id:"p5", a:4, b:10000, c:50000, v:"x", title:"Contoh Cepat 5"}
+      ];
+
+      var MISSIONS = [
+        {
+          id:"buku", tag:"Misi 1 \u00b7 Belanja", v:"x",
+          a:4, b:10000, c:50000,
+          title:"Harga Satu Buku Tulis",
+          story:"Harga 4 buku tulis ditambah Rp10.000,00 sama dengan Rp50.000,00. Jika harga satu buku tulis dimisalkan x, berapa harga satu buku tulis?",
+          diketahui:"Harga 4 buku tulis ditambah Rp10.000,00 sama dengan Rp50.000,00. Harga satu buku tulis dimisalkan x.",
+          ditanyakan:"Harga satu buku tulis.",
+          steps:[
+            {op:"Model matematika yang terbentuk:", eq:"4x + 10.000 = 50.000"},
+            {op:"Kedua ruas dikurang 10.000:", eq:"4x = 40.000"},
+            {op:"Kedua ruas dibagi 4:", eq:"x = 10.000"}
+          ],
+          jadi:"Jadi, harga satu buku tulis adalah Rp10.000,00."
+        },
+        {
+          id:"dina", tag:"Misi 2 \u00b7 Tabungan", v:"m",
+          a:15000, b:45000, c:120000,
+          title:"Tabungan Dina",
+          story:"Dina sudah memiliki tabungan Rp45.000,00. Ia menabung Rp15.000,00 setiap bulan. Jika m menyatakan banyak bulan menabung, setelah berapa bulan tabungan Dina mencapai Rp120.000,00?",
+          diketahui:"Tabungan awal Dina Rp45.000,00, tabungan setiap bulan Rp15.000,00, dan target tabungan Rp120.000,00.",
+          ditanyakan:"Banyak bulan yang diperlukan Dina untuk mencapai target tabungan.",
+          steps:[
+            {op:"Model matematika yang terbentuk:", eq:"15.000m + 45.000 = 120.000"},
+            {op:"Kedua ruas dikurang 45.000:", eq:"15.000m = 75.000"},
+            {op:"Kedua ruas dibagi 15.000:", eq:"m = 5"}
+          ],
+          jadi:"Jadi, tabungan Dina mencapai Rp120.000,00 setelah menabung selama 5 bulan."
+        },
+        {
+          id:"parkir", tag:"Misi 3 \u00b7 Tarif Parkir", v:"j",
+          a:3000, b:5000, c:20000,
+          title:"Lama Parkir",
+          story:"Tarif parkir terdiri atas biaya awal Rp5.000,00 ditambah Rp3.000,00 untuk setiap jam berikutnya. Jika j menyatakan lama parkir dalam jam, berapa jam lama parkir jika total yang dibayar Rp20.000,00?",
+          diketahui:"Biaya awal parkir Rp5.000,00, tarif setiap jam Rp3.000,00, dan total biaya Rp20.000,00.",
+          ditanyakan:"Lama parkir dalam jam.",
+          steps:[
+            {op:"Model matematika yang terbentuk:", eq:"3.000j + 5.000 = 20.000"},
+            {op:"Kedua ruas dikurang 5.000:", eq:"3.000j = 15.000"},
+            {op:"Kedua ruas dibagi 3.000:", eq:"j = 5"}
+          ],
+          jadi:"Jadi, lama parkir adalah 5 jam."
+        }
+      ];
+
+      /* ---------- state ---------- */
+      var S = {
+        a: frInt(1), b: frInt(5), c: frInt(12), v:"x",
+        orig: null, title:"Persamaan Awal",
+        missionId:null, isChallenge:false, counted:false,
+        history:[], log:[], solved:false, trialFound:false
+      };
+      var missionsDone = {};
+      var challengeScore = 0;
+
+      var $ = function(id){ return document.getElementById(id); };
+      var equationDisplay=$("equationDisplay"), eqTitle=$("eqTitle"), eqCaption=$("eqCaption"),
+          stepCount=$("stepCount"), statusChip=$("statusChip"),
+          leftVal=$("leftVal"), rightVal=$("rightVal"), vsSign=$("vsSign"),
+          verdict=$("verdict"), trialSlider=$("trialSlider"), trialOut=$("trialOut"),
+          trialVarLabel=$("trialVarLabel"), journalList=$("journalList"), journalEmpty=$("journalEmpty"),
+          logList=$("logList"), opMsg=$("opMsg"), hintBox=$("hintBox"),
+          solvedBanner=$("solvedBanner"), solvedText=$("solvedText"), solvedExtra=$("solvedExtra"),
+          beamG=$("beamG"), leftHang=$("leftHang"), rightHang=$("rightHang");
+
+      /* ---------- tabs ---------- */
+      function showTab(name){
+        document.querySelectorAll(".tab-panel").forEach(function(p){
+          p.classList.toggle("active", p.getAttribute("data-panel")===name);
+        });
+        document.querySelectorAll(".tab-btn").forEach(function(b){
+          var on = b.getAttribute("data-tab")===name;
+          b.classList.toggle("active", on);
+          b.setAttribute("aria-selected", on ? "true" : "false");
+        });
+      }
+      function goToLab(){
+        showTab("lab");
+        window.scrollTo({top:0, behavior:"smooth"});
+      }
+      document.querySelectorAll(".tab-btn").forEach(function(b){
+        b.addEventListener("click", function(){
+          showTab(b.getAttribute("data-tab"));
+          window.scrollTo({top:0, behavior:"smooth"});
+        });
+      });
+
+      /* ---------- equation formatting ---------- */
+      function termAHTML(){
+        if(frEqInt(S.a,1)) return '<span class="var">'+S.v+'</span>';
+        if(frEqInt(S.a,-1)) return '\u2212<span class="var">'+S.v+'</span>';
+        if(S.a.d===1) return fmt(S.a)+'<span class="var">'+S.v+'</span>';
+        return fmt(S.a)+' <span class="var">'+S.v+'</span>';
+      }
+      function equationHTML(){
+        var left = termAHTML();
+        if(!frEqInt(S.b,0)){
+          if(S.b.n>0) left += " + " + fmt(S.b);
+          else left += " \u2212 " + fmt(Fr(-S.b.n, S.b.d));
+        }
+        return left + ' <span class="eq-sign">=</span> ' + fmt(S.c);
+      }
+      function equationPlain(){
+        function t(f){ return fmtPlain(f); }
+        var left;
+        if(frEqInt(S.a,1)) left = S.v;
+        else if(frEqInt(S.a,-1)) left = "\u2212"+S.v;
+        else left = t(S.a)+S.v;
+        if(!frEqInt(S.b,0)){
+          if(S.b.n>0) left += " + " + t(S.b);
+          else left += " \u2212 " + t(Fr(-S.b.n,S.b.d));
+        }
+        return left + " = " + t(S.c);
+      }
+      function solutionOf(a,b,c){
+        // solve a*x + b = c  ->  x = (c - b)/a
+        var num = Fr(c.n*b.d - b.n*c.d, c.d*b.d); // c - b
+        // divide by a: num / a
+        return Fr(num.n * a.d, num.d * a.n);
+      }
+
+      /* ---------- scale drawing ---------- */
+      function boxSVG(x,y,label){
+        return '<rect class="svg-box" x="'+x+'" y="'+y+'" width="40" height="28" rx="6"/>'+
+               '<text class="svg-box-txt" x="'+(x+20)+'" y="'+(y+19)+'" text-anchor="middle" font-size="14">'+label+'</text>';
+      }
+      function weightSVG(cx, topY, label, neg){
+        return '<path class="svg-weight'+(neg?" neg":"")+'" d="M '+(cx-26)+' '+topY+' L '+(cx+26)+' '+topY+' L '+(cx+19)+' '+(topY+34)+' L '+(cx-19)+' '+(topY+34)+' Z"/>'+
+               '<rect class="svg-weight'+(neg?" neg":"")+'" x="'+(cx-8)+'" y="'+(topY-9)+'" width="16" height="10" rx="4"/>'+
+               '<text class="svg-weight-txt" x="'+cx+'" y="'+(topY+23)+'" text-anchor="middle" font-size="12">'+label+'</text>';
+      }
+      function panContents(isLeft){
+        var cx = isLeft ? 170 : 490;
+        var items = "";
+        var panY = 252;
+        var pan = '<line class="svg-string" x1="'+cx+'" y1="110" x2="'+(cx-52)+'" y2="'+panY+'"/>'+
+                  '<line class="svg-string" x1="'+cx+'" y1="110" x2="'+(cx+52)+'" y2="'+panY+'"/>'+
+                  '<path class="svg-pan" d="M '+(cx-62)+' '+panY+' L '+(cx+62)+' '+panY+' L '+(cx+44)+' '+(panY+20)+' L '+(cx-44)+' '+(panY+20)+' Z"/>';
+        if(isLeft){
+          var aInt = S.a.d===1 ? S.a.n : null;
+          var pieces = [];
+          if(aInt !== null && aInt >= 1 && aInt <= 6){
+            for(var i=0;i<aInt;i++) pieces.push({type:"box", label:S.v});
+          } else if(aInt !== null && aInt > 6){
+            pieces.push({type:"single", label: fmtPlain(S.a)+S.v});
+          } else {
+            pieces.push({type:"single", label: fmtPlain(S.a)+S.v});
+          }
+          if(!frEqInt(S.b,0)) pieces.push({type:"weight", label: fmtPlain(S.b), neg: S.b.n<0});
+          // layout pieces in a row centered on cx, sitting on pan
+          var widths = pieces.map(function(p){ return p.type==="box"?44:(p.type==="weight"?56:74); });
+          var total = widths.reduce(function(s,w){return s+w;},0) + (pieces.length-1)*6;
+          var startX = cx - total/2;
+          pieces.forEach(function(p,i){
+            var w = widths[i]; var px = startX + w/2;
+            if(p.type==="box") items += boxSVG(startX, panY-30, p.label);
+            else if(p.type==="weight") items += weightSVG(px, panY-36, p.label, p.neg);
+            else items += '<rect class="svg-single" x="'+startX+'" y="'+(panY-32)+'" width="'+w+'" height="30" rx="8"/>'+
+                          '<text class="svg-single-txt" x="'+px+'" y="'+(panY-12)+'" text-anchor="middle" font-size="13">'+p.label+'</text>';
+            startX += w + 6;
+          });
+        } else {
+          items += weightSVG(cx, panY-46, fmtPlain(S.c), S.c.n<0);
+        }
+        return pan + items;
+      }
+
+      /* ---------- rendering ---------- */
+      function render(){
+        equationDisplay.innerHTML = equationHTML();
+        eqTitle.textContent = S.title;
+        eqCaption.textContent = "Piring kiri memuat ruas kiri, piring kanan memuat ruas kanan. Geser nilai " +
+          S.v + " untuk melihat piring mana yang lebih berat.";
+        leftHang.innerHTML = panContents(true);
+        rightHang.innerHTML = panContents(false);
+        stepCount.textContent = S.history.length;
+        if(S.solved){
+          statusChip.textContent = "Selesai";
+          statusChip.className = "chip ok";
+        } else {
+          statusChip.textContent = "Belum selesai";
+          statusChip.className = "chip";
+        }
+        renderTrial();
+        renderLog();
+        $("undoBtn").disabled = S.history.length===0;
+      }
+      function renderLog(){
+        if(S.log.length===0){ logList.innerHTML = '<p class="op-note">Belum ada langkah. Catatan akan muncul di sini setiap kamu melakukan operasi.</p>'; return; }
+        logList.innerHTML = S.log.map(function(item,i){
+          return '<div class="log-item"><span class="log-num">'+(i+1)+'</span><div class="log-body">'+
+                 '<span class="op">'+item.op+'</span><span class="eq">'+item.eq+'</span></div></div>';
+        }).join("");
+      }
+      function renderTrial(){
+        var t = parseFloat(trialSlider.value);
+        trialOut.textContent = S.v + " = " + fmtNum(t);
+        trialVarLabel.textContent = S.v;
+        var lv = frVal(S.a)*t + frVal(S.b);
+        var rv = frVal(S.c);
+        leftVal.textContent = fmtNum(lv);
+        rightVal.textContent = fmtNum(rv);
+        var diff = rv - lv;
+        var scaleRef = Math.max(Math.abs(lv), Math.abs(rv), 1);
+        var angle = Math.max(-8, Math.min(8, (diff/scaleRef)*14));
+        beamG.setAttribute("transform", "rotate("+angle.toFixed(2)+" 320 108)");
+        beamG.style.transition = "transform .45s ease";
+        if(Math.abs(diff) < 1e-9){
+          vsSign.textContent = "=";
+          verdict.className = "verdict good";
+          verdict.innerHTML = "Seimbang! Untuk " + S.v + " = " + fmtNum(t) + ", ruas kiri sama dengan ruas kanan (" +
+            fmtNum(lv) + "). Nilai ini adalah penyelesaian persamaan." +
+            (S.solved ? "" : " Sekarang buktikan dengan operasi kesetaraan di panel kanan.");
+          if(!S.trialFound){ S.trialFound = true; }
+        } else if(diff > 0){
+          vsSign.textContent = "<";
+          verdict.className = "verdict bad";
+          verdict.innerHTML = "Piring kanan lebih berat: ruas kiri (" + fmtNum(lv) + ") lebih kecil dari ruas kanan (" +
+            fmtNum(rv) + "). Coba naikkan nilai " + S.v + (frVal(S.a)>0 ? "." : " atau perhatikan arah koefisiennya.");
+        } else {
+          vsSign.textContent = ">";
+          verdict.className = "verdict bad";
+          verdict.innerHTML = "Piring kiri lebih berat: ruas kiri (" + fmtNum(lv) + ") lebih besar dari ruas kanan (" +
+            fmtNum(rv) + "). Coba turunkan nilai " + S.v + (frVal(S.a)>0 ? "." : " atau perhatikan arah koefisiennya.");
+        }
+      }
+
+      function setupSlider(){
+        var sol = solutionOf(S.orig.a, S.orig.b, S.orig.c);
+        var sv = frVal(sol);
+        var maxAbs = Math.max(Math.abs(frVal(S.orig.c)), Math.abs(sv)*2, 10);
+        var step = 1, max;
+        if(maxAbs > 1000){ step = 500; max = Math.ceil((Math.abs(sv)*2 + 2000)/step)*step; }
+        else { max = Math.max(20, Math.ceil(Math.abs(sv)*2)+4); }
+        if(sv < 0){ trialSlider.min = String(-max); } else { trialSlider.min = "0"; }
+        trialSlider.max = String(max);
+        trialSlider.step = String(step);
+        var start = sv > 0 ? Math.max(step, Math.floor(sv/2/step)*step) : 0;
+        if(Math.abs(start - sv) < 1e-9) start = start + step <= max ? start + step : Math.max(0, start - step);
+        trialSlider.value = String(start);
+      }
+
+      /* ---------- loading equations ---------- */
+      function loadEq(cfg, opts){
+        opts = opts || {};
+        S.a = frInt(cfg.a); S.b = frInt(cfg.b); S.c = frInt(cfg.c);
+        S.v = cfg.v || "x";
+        S.orig = {a:S.a, b:S.b, c:S.c};
+        S.title = cfg.title || "Persamaan";
+        S.missionId = opts.missionId || null;
+        S.isChallenge = !!opts.challenge;
+        S.counted = false;
+        S.history = [];
+        S.solved = false;
+        S.trialFound = false;
+        S.log = [{op:"Persamaan awal", eq: equationPlain()}];
+        solvedBanner.className = "solved-banner";
+        opMsg.textContent = ""; opMsg.className = "op-msg";
+        hintBox.className = "hint-box";
+        document.querySelectorAll(".preset").forEach(function(b){ b.classList.remove("active"); });
+        if(opts.presetId){
+          var pb = document.querySelector('.preset[data-id="'+opts.presetId+'"]');
+          if(pb) pb.classList.add("active");
+        }
+        setupSlider();
+        render();
+      }
+
+      function snapshot(){ return {a:S.a, b:S.b, c:S.c}; }
+
+      function checkSolved(){
+        if(frEqInt(S.a,1) && frEqInt(S.b,0) && !S.solved){
+          S.solved = true;
+          var sol = S.c;
+          solvedText.textContent = S.v + " = " + fmtPlain(sol);
+          var extra = "Periksa kembali: substitusikan nilai ini ke persamaan awal, dan kedua ruas bernilai sama.";
+          if(S.missionId){
+            missionsDone[S.missionId] = true;
+            extra = "Misi terselesaikan. Bandingkan langkahmu dengan pembahasan baku pada tab Misi Kontekstual.";
+            renderMissions(true);
+          }
+          if(S.isChallenge && !S.counted){
+            S.counted = true;
+            challengeScore++;
+            $("challengeScore").textContent = challengeScore;
+            extra = "Tantangan selesai! Skor tantanganmu bertambah. Ambil tantangan baru kapan saja.";
+          }
+          solvedExtra.textContent = extra;
+          solvedBanner.className = "solved-banner show";
+        }
+      }
+
+      /* ---------- operations ---------- */
+      function applyOp(kind){
+        var raw = $("opN").value.trim();
+        var n = Number(raw);
+        opMsg.className = "op-msg";
+        if(raw==="" || !isFinite(n) || Math.floor(n)!==n){
+          opMsg.textContent = "Isi bilangan n dengan bilangan bulat terlebih dahulu.";
+          return;
+        }
+        if((kind==="mul" || kind==="div") && n===0){
+          opMsg.textContent = "Mengali atau membagi kedua ruas dengan nol tidak diperbolehkan.";
+          return;
+        }
+        if((kind==="add" || kind==="sub") && n===0){
+          opMsg.textContent = "Menambah atau mengurang dengan nol tidak mengubah persamaan. Pilih bilangan lain.";
+          return;
+        }
+        if(kind==="mul" && n===1){
+          opMsg.textContent = "Mengali dengan 1 tidak mengubah persamaan. Pilih bilangan lain.";
+          return;
+        }
+        S.history.push(snapshot());
+        var label;
+        var absn = fmtInt(Math.abs(n));
+        if(kind==="add"){ S.b = frAddInt(S.b, n); S.c = frAddInt(S.c, n); label = n>=0 ? "Kedua ruas ditambah "+absn : "Kedua ruas dikurang "+absn; }
+        if(kind==="sub"){ S.b = frAddInt(S.b, -n); S.c = frAddInt(S.c, -n); label = n>=0 ? "Kedua ruas dikurang "+absn : "Kedua ruas ditambah "+absn; }
+        if(kind==="mul"){ S.a = frMulInt(S.a, n); S.b = frMulInt(S.b, n); S.c = frMulInt(S.c, n); label = "Kedua ruas dikali "+fmtInt(n); }
+        if(kind==="div"){ S.a = frDivInt(S.a, n); S.b = frDivInt(S.b, n); S.c = frDivInt(S.c, n); label = "Kedua ruas dibagi "+fmtInt(n); }
+        S.log.push({op: label, eq: equationPlain()});
+        opMsg.textContent = "";
+        hintBox.className = "hint-box";
+        render();
+        checkSolved();
+        render();
+      }
+
+      document.querySelectorAll(".op-grid button").forEach(function(btn){
+        btn.addEventListener("click", function(){ applyOp(btn.getAttribute("data-op")); });
+      });
+
+      $("undoBtn").addEventListener("click", function(){
+        if(S.history.length===0) return;
+        var prev = S.history.pop();
+        S.a = prev.a; S.b = prev.b; S.c = prev.c;
+        S.log.pop();
+        if(S.solved){ S.solved = false; solvedBanner.className = "solved-banner"; }
+        opMsg.textContent = "";
+        render();
+      });
+      $("resetBtn").addEventListener("click", function(){
+        S.a = S.orig.a; S.b = S.orig.b; S.c = S.orig.c;
+        S.history = []; S.solved = false; S.trialFound = false;
+        S.log = [{op:"Persamaan awal", eq: equationPlain()}];
+        solvedBanner.className = "solved-banner";
+        opMsg.textContent = "";
+        hintBox.className = "hint-box";
+        render();
+      });
+      $("hintBtn").addEventListener("click", function(){
+        var txt;
+        if(S.solved){
+          txt = "Persamaan ini sudah selesai. Tekan \u201CUlangi Persamaan\u201D untuk berlatih lagi, atau pilih persamaan lain.";
+        } else if(!frEqInt(S.b,0)){
+          if(S.b.n>0) txt = "Langkah berikutnya: kurangkan kedua ruas dengan " + fmtPlain(S.b) + " agar konstanta di ruas kiri hilang. Isi bilangan n = " + fmtPlain(S.b) + ", lalu tekan \u201CKurang n\u201D.";
+          else txt = "Langkah berikutnya: tambahkan kedua ruas dengan " + fmtPlain(Fr(-S.b.n,S.b.d)) + " agar konstanta di ruas kiri hilang. Isi bilangan n = " + fmtPlain(Fr(-S.b.n,S.b.d)) + ", lalu tekan \u201CTambah n\u201D.";
+        } else if(!frEqInt(S.a,1)){
+          if(S.a.d!==1) txt = "Koefisien " + S.v + " masih berupa pecahan. Kalikan kedua ruas dengan penyebutnya, yaitu " + S.a.d + ", agar koefisien menjadi bilangan bulat.";
+          else txt = "Konstanta sudah hilang. Sekarang bagikan kedua ruas dengan koefisien " + S.v + ", yaitu " + fmtPlain(S.a) + ", agar " + S.v + " berdiri sendiri.";
+        } else {
+          txt = "Persamaan sudah berbentuk " + S.v + " = bilangan. Itulah penyelesaiannya.";
+        }
+        hintBox.textContent = txt;
+        hintBox.className = "hint-box show";
+      });
+
+      /* ---------- trial journal ---------- */
+      trialSlider.addEventListener("input", renderTrial);
+      $("recordTrialBtn").addEventListener("click", function(){
+        var t = parseFloat(trialSlider.value);
+        var lv = frVal(S.a)*t + frVal(S.b);
+        var rv = frVal(S.c);
+        var sama = Math.abs(lv-rv) < 1e-9;
+        journalEmpty.style.display = "none";
+        var row = document.createElement("div");
+        row.className = "jrow";
+        row.innerHTML = '<span class="mono">'+S.v+" = "+fmtNum(t)+'</span>'+
+          '<span>Ruas kiri: <span class="mono">'+fmtNum(lv)+'</span></span>'+
+          '<span>Ruas kanan: <span class="mono">'+fmtNum(rv)+'</span></span>'+
+          '<span class="st '+(sama?"sama":"beda")+'">'+(sama?"Sama \u2713":"Belum sama")+'</span>';
+        journalList.prepend(row);
+      });
+      $("clearJournalBtn").addEventListener("click", function(){
+        journalList.innerHTML = "";
+        journalEmpty.style.display = "";
+      });
+
+      /* ---------- presets ---------- */
+      var presetRow = $("presetRow");
+      PRESETS.forEach(function(p){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "preset";
+        b.setAttribute("data-id", p.id);
+        b.textContent = equationTextOf(p);
+        b.addEventListener("click", function(){
+          loadEq(p, {presetId:p.id});
+        });
+        presetRow.appendChild(b);
+      });
+      function equationTextOf(p){
+        var left = (p.a===1 ? "" : fmtInt(p.a)) + p.v;
+        if(p.b>0) left += " + " + fmtInt(p.b);
+        if(p.b<0) left += " \u2212 " + fmtInt(-p.b);
+        return left + " = " + fmtInt(p.c);
+      }
+
+      /* ---------- missions ---------- */
+      function renderMissions(openSolved){
+        var grid = $("missionGrid");
+        grid.innerHTML = "";
+        MISSIONS.forEach(function(m){
+          var done = !!missionsDone[m.id];
+          var card = document.createElement("div");
+          card.className = "card mission";
+          var stepsHTML = m.steps.map(function(s){
+            return '<p><span class="lbl">'+s.op+'</span><span class="step-eq">'+s.eq+'</span></p>';
+          }).join("");
+          card.innerHTML =
+            '<span class="tag'+(done?" done":"")+'">'+(done ? m.tag+" \u00b7 Selesai \u2713" : m.tag)+'</span>'+
+            '<h3>'+m.title+'</h3>'+
+            '<p>'+m.story+'</p>'+
+            '<div class="meq">'+equationTextOf(m)+'</div>'+
+            '<div class="spacer"></div>'+
+            '<button class="btn-teal" type="button">Muat ke Lab</button>'+
+            '<details class="bahas"'+(openSolved && S.missionId===m.id && done ? " open":"")+'>'+
+              '<summary>Pembahasan (Soal / Diketahui / Ditanyakan / Penyelesaian / Jadi)</summary>'+
+              '<div class="bahas-body">'+
+                '<p><span class="lbl">Soal:</span> '+m.story+'</p>'+
+                '<p><span class="lbl">Diketahui:</span> '+m.diketahui+'</p>'+
+                '<p><span class="lbl">Ditanyakan:</span> '+m.ditanyakan+'</p>'+
+                '<p><span class="lbl">Penyelesaian:</span></p>'+ stepsHTML +
+                '<div class="jadi">'+m.jadi+'</div>'+
+              '</div>'+
+            '</details>';
+          card.querySelector("button").addEventListener("click", function(){
+            loadEq(m, {missionId:m.id});
+            goToLab();
+          });
+          grid.appendChild(card);
+        });
+      }
+      renderMissions(false);
+
+      /* ---------- challenge & custom ---------- */
+      function randInt(lo,hi){ return lo + Math.floor(Math.random()*(hi-lo+1)); }
+      $("newChallengeBtn").addEventListener("click", function(){
+        var a = randInt(2,9);
+        var ans = randInt(2,12);
+        var b = 0;
+        while(b===0) b = randInt(-12,15);
+        var c = a*ans + b;
+        loadEq({a:a, b:b, c:c, v:"x", title:"Tantangan Acak"}, {challenge:true});
+        goToLab();
+      });
+      $("loadCustomBtn").addEventListener("click", function(){
+        var a = Number($("customA").value), b = Number($("customB").value), c = Number($("customC").value);
+        var msg = $("customMsg");
+        msg.className = "op-msg";
+        if([a,b,c].some(function(x){ return !isFinite(x) || Math.floor(x)!==x; })){
+          msg.textContent = "a, b, dan c harus berupa bilangan bulat.";
+          return;
+        }
+        if(a===0){
+          msg.textContent = "Koefisien a tidak boleh nol, karena persamaan harus memuat variabel.";
+          return;
+        }
+        msg.textContent = "";
+        loadEq({a:a, b:b, c:c, v:"x", title:"Persamaan Buatan Sendiri"});
+        goToLab();
+      });
+
+      /* ---------- init ---------- */
+      loadEq(PRESETS[0], {presetId:"p1"});
+    })();
+    </script>
+  </body>
+</html>
